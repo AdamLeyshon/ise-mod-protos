@@ -1,0 +1,76 @@
+// These are the packets used to authenticate/bind/verify
+// the client to an account
+
+syntax = "proto3";
+
+package bind;
+
+// The binding service, links a game to the users account via the Web UI
+service ClientBinder {
+  // Sends a greeting
+  rpc Bind (BindRequest) returns (BindReply) {}
+  rpc ConfirmBind (ConfirmBindRequest) returns (ConfirmBindReply) {}
+  rpc BindVerify (ClientBindVerifyRequest) returns (ClientBindVerifyReply) {}
+}
+
+enum BindTypeEnum {
+    AccountBind = 0;
+    ClientBind = 1;
+}
+
+message BindRequest {
+    string SteamId = 1;
+}
+
+message BindReply {
+    enum BindErrorReason {
+        None = 0;
+        Unknown = 1;
+        SteamIdInvalid = 2;
+        SteamIdBlocked = 3;
+    }
+    
+    bool Valid = 1;
+    string BindId = 2;
+    BindErrorReason Reason = 3;
+}
+
+// This message is used for two purposes
+// 1. Checking if a bind request is valid
+// 2. Acknowledging a FinalBindId
+message ConfirmBindRequest {
+    BindTypeEnum BindType = 1;
+    string BindId = 2;
+}
+
+// This message is used for two purposes
+// 1. Answering a bind request with status data.
+// 2. Acknowledging a Client Bind ID
+message ConfirmBindReply {
+    BindTypeEnum BindType = 1;
+    
+    // Lets them know if this Bind Id is still valid.
+    bool IsValid = 2;
+
+    // Has the Id been accepted?
+    bool BindComplete = 3;
+        
+    // If the user has confirmed the Id, this is set and is the permenant
+    // Id associated with that client.
+    // It must be stored by the client, it is required to authenticate later.
+    string ClientBindId = 4;
+
+    // Time left until this Bind Id is invalid.
+    // When this reaches 0, ValidBind becomes False. 
+    // Will never be less than 0.
+    int32 TTL = 5;
+}
+
+message ClientBindVerifyRequest {
+    string ClientBindId = 1;
+    string SteamId = 2;
+}
+  
+message ClientBindVerifyReply {
+    bool Valid = 1;
+}

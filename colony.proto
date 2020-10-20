@@ -1,0 +1,59 @@
+// These are the packets used to create/update/get Colony info
+// the client to an account
+
+syntax = "proto3";
+
+package colony;
+
+enum PlatformEnum {
+    Unknown = 0;
+    Windows = 1;
+    Linux = 2;
+    Mac = 3;
+}
+
+service ColonyService {
+    // The Client ID may be sent out of band, e.g. via HTTP Headers
+    // or they can use the message field.
+    // The requirement of which to use is up to the server implementer.
+    // It is included here in case the implementor wants a 100% protobuf
+    // protocol without any HTTP usage at all.
+    rpc Create (ColonyCreateRequest) returns (ColonyData) {}
+    rpc Update (ColonyUpdateRequest) returns (ColonyData) {}
+    rpc Get (ColonyGetRequest) returns (ColonyData) {}
+}
+
+message ColonyData {
+    string       ColonyId = 1;
+    string       Name = 2;
+    string       FactionName = 3;
+    int32        MapId = 9;
+    int32        Tick = 4;
+    // This is a fuse, once blown, it cannot be unset.
+    bool         UsedDevMode = 5;
+    string       GameVersion = 6;
+    PlatformEnum Platform = 7;
+    int64        CreateDate = 8;
+}
+
+message ColonyCreateRequest {
+    string ClientId = 1;
+    // Certain fields from ColonyData will be ignored
+    // during creation of the colony such as ColonyId and CreateDate.
+    ColonyData data = 2;
+}
+
+message ColonyUpdateRequest {    
+    string ClientId = 1;
+    // Certain fields from ColonyData will be ignored
+    // during update of the colony such as ColonyId, Platform and CreateDate.
+    ColonyData Data = 2;
+}
+
+message ColonyGetRequest {
+    string ClientId = 1;
+    string ColonyId = 2;
+}
+
+
+

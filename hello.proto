@@ -1,0 +1,25 @@
+// This is the first packet the client will send to the server
+// to start the handshake procedure.
+// This rpc is also used as a "ping/pong" service for keeping
+// connections open.
+
+syntax = "proto3";
+
+package hello;
+
+// The greeting service definition.
+service Greeter {
+  // Sends a greeting
+  rpc Hello (HelloRequest) returns (HelloReply) {}
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+  string ClientVersion = 1;
+}
+
+// The response message containing the server version
+message HelloReply {
+  string ServerVersion = 1;
+}
+

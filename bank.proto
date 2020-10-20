@@ -1,0 +1,28 @@
+// These are the packets used to get info about the colony bank balance.
+
+syntax = "proto3";
+
+package bank;
+
+enum CurrencyEnum  {
+    // Universal Trade Credits ᛊ
+    UTC = 0;
+}
+
+service BankService {
+    // The Client ID may be sent out of band, e.g. via HTTP Headers
+    // or they can use the message field.
+    // The requirement of which to use is up to the server implementer.
+    // It is included here in case the implementor wants a 100% protobuf
+    // protocol without any HTTP usage at all.
+    rpc Get (BankGetRequest) returns (BankData) {}
+}
+
+message BankData {
+    map<int32, int32> balance = 1;
+}
+
+message BankGetRequest {
+    string ClientId = 1;
+    string ColonyId = 2;
+}
