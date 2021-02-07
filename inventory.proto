@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package inventory;
+import "tradable.proto";
+
+// The greeting service definition.
+service InventoryService {
+    // Sends a greeting
+    rpc Get (InventoryRequest) returns (InventoryReply) {}
+  }
+
+message InventoryRequest {
+    string ClientBindId = 1;
+    string ColonyId = 2;
+}
+
+message InventoryReply {
+  // The items we have to offer
+  repeated tradable.Tradable Items = 1;
+    
+  // ID Code of promose, only valid until TTL expires
+  // You must sent this in the order request
+  // If the promise expires before your order is placed
+  // It will be refused and you will have to get the inventory again
+  string InventoryPromiseId = 2;
+
+  // UTC Epoch timestamp of when this offer expires
+  int64 InventoryPromiseExpires = 3;
+
+  // Fixed amount per KG of item to be sold
+  int32 CollectionChargePerKG = 4;
+
+  // Fixed amount per KG of item to be bought
+  int32 DeliveryChargePerKG = 5;
+
+  // Amount of cash in their account already.
+  int64 AccountBalance = 6;
+
+  // 
+}

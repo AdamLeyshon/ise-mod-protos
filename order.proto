@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package order;
+
+// The greeting service definition.
+service OrderService {
+    rpc Get (OrderRequest) returns (OrderReply) {}
+}
+
+message OrderItem {
+    string ItemCode = 1;
+    int32 Quantity = 2;
+    // Value between 0-100 representing the
+    // Remaining percentage hitpoints of this item
+    float Health = 3;
+}
+
+message OrderRequest {
+    string ClientBindId = 1;
+    string ColonyId = 2;
+    int32 ColonyTick = 3;
+    repeated OrderItem WantToSell = 4;
+    repeated OrderItem WantToBuy = 5;
+    string InventoryPromiseId = 6;
+}
+
+enum OrderRequestStatus {
+    Rejected = 0;
+    AcceptedAll = 1;
+    AcceptedPartial = 2;
+}
+
+message OrderReply {
+    string OrderId = 1;
+    OrderRequestStatus status = 2;
+    repeated OrderItem unavailable = 3;
+    int32 refunded = 4;
+}
+
+message OrderStatusRequest {
+    string ClientBindId = 1;
+    string ColonyId = 2;
+    string OrderId = 3;
+}
+
+enum OrderStatus {
+    Placed = 0;
+    OutForDelivery = 1;
+    Delivered = 2;
+    Failed = 3;
+    Reversed = 4;
+}
+
+message OrderStatusReply {
+    OrderStatus status = 1;
+
+}

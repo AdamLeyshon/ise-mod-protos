@@ -18,11 +18,17 @@ service BankService {
     rpc Get (BankGetRequest) returns (BankData) {}
 }
 
+enum BankCurrency 
+{
+    Silver = 0;
+}
+
 message BankData {
     map<int32, int32> balance = 1;
 }
 
 message BankGetRequest {
-    string ClientId = 1;
+    string ClientBindId = 1;
     string ColonyId = 2;
+    BankCurrency currency = 3;
 }

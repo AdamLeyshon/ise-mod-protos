@@ -4,6 +4,7 @@
 syntax = "proto3";
 
 package colony;
+import "tradable.proto";
 
 enum PlatformEnum {
     Unknown = 0;
@@ -21,6 +22,8 @@ service ColonyService {
     rpc Create (ColonyCreateRequest) returns (ColonyData) {}
     rpc Update (ColonyUpdateRequest) returns (ColonyData) {}
     rpc Get (ColonyGetRequest) returns (ColonyData) {}
+    rpc ModSet (ColonyModsSetRequest) returns (ColonyModsSetReply) {}
+    rpc TradableSet (ColonyTradableSetRequest) returns (ColonyTradableSetReply) {}
 }
 
 message ColonyData {
@@ -34,26 +37,44 @@ message ColonyData {
     string       GameVersion = 6;
     PlatformEnum Platform = 7;
     int64        CreateDate = 8;
+
+    // The world seed
+    string       Seed = 10;
+    //X,Y of colony on map
+    string       Location = 11;
 }
 
 message ColonyCreateRequest {
-    string ClientId = 1;
+    string ClientBindId = 1;
     // Certain fields from ColonyData will be ignored
     // during creation of the colony such as ColonyId and CreateDate.
     ColonyData data = 2;
 }
 
 message ColonyUpdateRequest {    
-    string ClientId = 1;
+    string ClientBindId = 1;
     // Certain fields from ColonyData will be ignored
     // during update of the colony such as ColonyId, Platform and CreateDate.
-    ColonyData Data = 2;
+    ColonyData Data = 3;
 }
 
 message ColonyGetRequest {
-    string ClientId = 1;
+    string ClientBindId = 1;
     string ColonyId = 2;
 }
 
+message ColonyModsSetRequest {
+    string ClientBindId = 1;
+    string ColonyId = 2;
+    repeated string ModName = 3;
+}
 
+message ColonyModsSetReply {}
 
+message ColonyTradableSetRequest {
+    string ClientBindId = 1;
+    string ColonyId = 2;
+    repeated tradable.ColonyTradable item = 3;
+}
+
+message ColonyTradableSetReply {}
