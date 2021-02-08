@@ -4,7 +4,11 @@ package order;
 
 // The greeting service definition.
 service OrderService {
-    rpc Get (OrderRequest) returns (OrderReply) {}
+    rpc PlaceOrder (OrderRequest) returns (OrderReply) {}
+    rpc List (OrderListRequest) returns (OrderListReply) {}
+    rpc OrderStatus (OrderStatusRequest) returns (OrderStatusReply) {}
+    rpc Update (OrderUpdateRequest) returns (OrderStatusReply) {}
+
 }
 
 message OrderItem {
@@ -43,7 +47,7 @@ message OrderStatusRequest {
     string OrderId = 3;
 }
 
-enum OrderStatus {
+enum OrderStatusEnum {
     Placed = 0;
     OutForDelivery = 1;
     Delivered = 2;
@@ -52,6 +56,24 @@ enum OrderStatus {
 }
 
 message OrderStatusReply {
-    OrderStatus status = 1;
+    string OrderId = 1;
+    OrderStatusEnum Status = 2;
+    int32 DeliveryTick = 3;
+}
 
+message OrderListRequest {
+    string ClientBindId = 1;
+    string ColonyId = 2;
+}
+
+message OrderListReply {
+    repeated OrderStatusReply orders = 1;
+}
+
+message OrderUpdateRequest {
+    string ClientBindId = 1;
+    string ColonyId = 2;
+    string OrderId = 3;
+    OrderStatusEnum status = 4;
+    int32 ColonyTick = 5;
 }
