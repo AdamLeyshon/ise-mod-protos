@@ -34,7 +34,7 @@ message InventoryReply {
   int32 DeliveryChargePerKG = 5;
 
   // Amount of cash in their account already.
-  int64 AccountBalance = 6;
+  int32 AccountBalance = 6;
 
   // 
 }

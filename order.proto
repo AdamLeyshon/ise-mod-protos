@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package order;
+import "bank.proto";
 
 // The greeting service definition.
 service OrderService {
@@ -8,43 +9,7 @@ service OrderService {
     rpc List (OrderListRequest) returns (OrderListReply) {}
     rpc OrderStatus (OrderStatusRequest) returns (OrderStatusReply) {}
     rpc Update (OrderUpdateRequest) returns (OrderStatusReply) {}
-
-}
-
-message OrderItem {
-    string ItemCode = 1;
-    int32 Quantity = 2;
-    // Value between 0-100 representing the
-    // Remaining percentage hitpoints of this item
-    float Health = 3;
-}
-
-message OrderRequest {
-    string ClientBindId = 1;
-    string ColonyId = 2;
-    int32 ColonyTick = 3;
-    repeated OrderItem WantToSell = 4;
-    repeated OrderItem WantToBuy = 5;
-    string InventoryPromiseId = 6;
-}
-
-enum OrderRequestStatus {
-    Rejected = 0;
-    AcceptedAll = 1;
-    AcceptedPartial = 2;
-}
-
-message OrderReply {
-    string OrderId = 1;
-    OrderRequestStatus status = 2;
-    repeated OrderItem unavailable = 3;
-    int32 refunded = 4;
-}
-
-message OrderStatusRequest {
-    string ClientBindId = 1;
-    string ColonyId = 2;
-    string OrderId = 3;
+    rpc GetManifest (OrderStatusRequest) returns (OrderManifestReply) {}
 }
 
 enum OrderStatusEnum {
@@ -55,19 +20,56 @@ enum OrderStatusEnum {
     Reversed = 4;
 }
 
-message OrderStatusReply {
-    string OrderId = 1;
-    OrderStatusEnum Status = 2;
-    int32 DeliveryTick = 3;
+enum OrderRequestStatus {
+    Rejected = 0;
+    AcceptedAll = 1;
+    AcceptedPartial = 2;
+}
+
+message OrderItem {
+    string ItemCode = 1;
+    int32 Quantity = 2;
+    // Value between 0-100 representing the
+    // Remaining percentage hitpoints of this item
+    float Health = 3;
+}
+
+message DeliveryItem {
+    string ItemCode = 1;
+    string ThingDef = 2;
+    int32 Quantity = 3;
+    int32 Quality = 4;
+    string Stuff = 5;
+    bool Minified = 6;
+}
+
+message OrderRequest {
+    string ClientBindId = 1;
+    string ColonyId = 2;
+    int32 ColonyTick = 3;
+    repeated OrderItem WantToSell = 4;
+    repeated OrderItem WantToBuy = 5;
+    string InventoryPromiseId = 6;
+    bank.BankCurrency Currency = 7;
+    int32 AdditionalFunds = 8;
+}
+
+message OrderStatusRequest {
+    string ClientBindId = 1;
+    string ColonyId = 2;
+    string OrderId = 3;
+}
+
+message OrderManifestRequest {
+    string ClientBindId = 1;
+    string ColonyId = 2;
+    string OrderId = 3;
 }
 
 message OrderListRequest {
     string ClientBindId = 1;
     string ColonyId = 2;
-}
-
-message OrderListReply {
-    repeated OrderStatusReply orders = 1;
+    bool Any = 3;
 }
 
 message OrderUpdateRequest {
@@ -76,4 +78,26 @@ message OrderUpdateRequest {
     string OrderId = 3;
     OrderStatusEnum status = 4;
     int32 ColonyTick = 5;
+}
+
+message OrderStatusReply {
+    string OrderId = 1;
+    OrderStatusEnum Status = 2;
+    int32 DeliveryTick = 3;
+}
+
+message OrderReply {
+    OrderStatusReply data = 1;
+    OrderRequestStatus status = 2;
+    repeated OrderItem unavailable = 3;
+    int32 refunded = 4;
+    int32 balance = 5;
+}
+
+message OrderListReply {
+    repeated OrderStatusReply orders = 1;
+}
+
+message OrderManifestReply {
+    repeated DeliveryItem items = 1;
 }

@@ -30,5 +30,4 @@ message BankData {
 message BankGetRequest {
     string ClientBindId = 1;
     string ColonyId = 2;
-    BankCurrency currency = 3;
 }
