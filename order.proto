@@ -84,6 +84,7 @@ message OrderStatusReply {
     string OrderId = 1;
     OrderStatusEnum Status = 2;
     int32 DeliveryTick = 3;
+    int32 PlacedTick = 4;
 }
 
 message OrderReply {
