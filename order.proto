@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package order;
-import "bank.proto";
+import "common.proto";
 
 // The greeting service definition.
 service OrderService {
@@ -50,7 +50,7 @@ message OrderRequest {
     repeated OrderItem WantToSell = 4;
     repeated OrderItem WantToBuy = 5;
     string InventoryPromiseId = 6;
-    bank.BankCurrency Currency = 7;
+    common.CurrencyEnum Currency = 7;
     int32 AdditionalFunds = 8;
 }
 

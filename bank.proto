@@ -3,6 +3,8 @@
 syntax = "proto3";
 
 package bank;
+import "order.proto";
+import "common.proto";
 
 service BankService {
     // The Client ID may be sent out of band, e.g. via HTTP Headers
@@ -11,19 +13,27 @@ service BankService {
     // It is included here in case the implementor wants a 100% protobuf
     // protocol without any HTTP usage at all.
     rpc Get (BankGetRequest) returns (BankDataReply) {}
-}
-
-enum BankCurrency 
-{
-    // Universal Trade Credits ᛊ
-    UTC = 0;
+    rpc Withdraw (BankWithdrawRequest) returns (BankWithdrawReply) {}
 }
 
 message BankDataReply {
-    map<int32, int32> balance = 1;
+    map<int32, int32> Balance = 1;
 }
 
 message BankGetRequest {
     string ClientBindId = 1;
     string ColonyId = 2;
+}
+
+message BankWithdrawRequest {
+    string ClientBindId = 1;
+    string ColonyId = 2;
+    common.CurrencyEnum Currency = 3;
+    int32 Amount = 4;
+}
+
+message BankWithdrawReply {
+    order.OrderStatusReply Data = 1;
+    order.OrderRequestStatus Status = 2;
+    int32 Balance = 5;
 }
