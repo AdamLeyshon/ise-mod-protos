@@ -75,6 +75,7 @@ message ColonyTradableSetRequest {
     string ClientBindId = 1;
     string ColonyId = 2;
     repeated tradable.ColonyTradable item = 3;
+    bool FinalPacket = 10;
 }
 
 message ColonyTradableSetReply {}
