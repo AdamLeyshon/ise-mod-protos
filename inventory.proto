@@ -3,11 +3,10 @@ syntax = "proto3";
 package inventory;
 import "tradable.proto";
 
-// The greeting service definition.
 service InventoryService {
-    // Sends a greeting
     rpc Get (InventoryRequest) returns (InventoryReply) {}
-  }
+    rpc Activate (ActivatePromiseRequest) returns (ActivatePromiseReply) {}
+}
 
 message InventoryRequest {
     string ClientBindId = 1;
@@ -37,4 +36,16 @@ message InventoryReply {
   int32 AccountBalance = 6;
 
   // 
+}
+
+message ActivatePromiseRequest {
+  string ClientBindId = 1;
+  string ColonyId = 2;
+  string InventoryPromiseId = 3;
+}
+
+message ActivatePromiseReply {
+  bool success = 1;
+  string InventoryPromiseId = 2;
+  int64 InventoryPromiseExpires = 3;
 }
