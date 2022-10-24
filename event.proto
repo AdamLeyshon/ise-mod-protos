@@ -1,0 +1,37 @@
+// These are the packets used to get info about the colony bank balance.
+
+syntax = "proto3";
+
+package event;
+import "common.proto";
+import "order.proto";
+
+enum EventType
+{
+  ColonyCreate = 0;
+  OrderCreate = 1;
+  ContractCreate = 2;
+}
+
+message Event {
+  EventType eventType = 1;
+  oneof message {
+    ColonyBasicEventData colony_create_event = 2;
+    OrderCreateEvent order_create_event = 3;
+  }
+}
+
+message ColonyBasicEventData {
+  string       Name = 1;
+  string       FactionName = 2;
+}
+
+message OrderCreateEvent {
+  ColonyBasicEventData colony = 1;
+  repeated order.OrderItem Sold = 4;
+  repeated order.OrderItem Bought = 5;
+}
+
+message ContractCreateEvent {
+
+}

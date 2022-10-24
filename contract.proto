@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package contract;
+import "common.proto";
+import "tradable.proto";
+
+service ContractService {
+  rpc GetContracts (GetContractsRequest) returns (GetContractsReply) {}
+  rpc CreateContract (CreateContractRequest) returns (CreateContractReply) {}
+}
+
+message ProposedContract {
+  repeated tradable.Tradable items = 1;
+  int64 cashValue = 2;
+  common.CurrencyEnum Currency = 3;
+  int32 cashAmount = 4;
+}
+
+message ActiveContract {
+  string ContractId = 1;
+  string OwnerId = 2;
+  repeated tradable.Tradable items = 3;
+  common.CurrencyEnum Currency = 4;
+  int32 cashAmount = 5;
+  int64 expiryTS = 6;
+}
+
+message GetContractsRequest {
+  string ClientBindId = 1;
+  string ColonyId = 2;
+}
+
+message GetContractsReply {
+  repeated ActiveContract contracts = 1;
+}
+
+message CreateContractRequest {
+  string ClientBindId = 1;
+  string ColonyId = 2;
+  ProposedContract contract = 3;
+}
+
+message CreateContractReply {
+  bool accepted = 1;
+}
+

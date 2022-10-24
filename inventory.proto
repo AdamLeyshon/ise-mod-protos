@@ -4,20 +4,49 @@ package inventory;
 import "tradable.proto";
 
 service InventoryService {
-    rpc Get (InventoryRequest) returns (InventoryReply) {}
-    rpc Activate (ActivatePromiseRequest) returns (ActivatePromiseReply) {}
+  rpc Get (InventoryRequest) returns (InventoryReply) {}
+  //  rpc GetMarketConfig (MarketConfigRequest) returns (MarketConfigReply) {}
+  //  rpc GetBatch (InventoryBatchRequest) returns (InventoryBatchReply) {}
+  rpc Activate (ActivatePromiseRequest) returns (ActivatePromiseReply) {}
+  rpc GeneratePromise (GeneratePromiseRequest) returns (GeneratePromiseReply) {}
 }
 
+
+//message MarketConfigRequest {
+//}
+//
+//message MarketConfigReply {
+//  // Fixed amount per KG of item to be sold
+//  int32 CollectionChargePerKG = 1;
+//
+//  // Fixed amount per KG of item to be bought
+//  int32 DeliveryChargePerKG = 2;
+//}
+//
+
 message InventoryRequest {
-    string ClientBindId = 1;
-    string ColonyId = 2;
+  string ClientBindId = 1;
+  string ColonyId = 2;
+  bool ContinueExistingPromise = 3;
 }
+
+//
+//message InventoryBatchRequest {
+//  string ClientBindId = 1;
+//  string ColonyId = 2;
+//  repeated tradable.ColonyTradable items = 3;
+//}
+//
+//message InventoryBatchReply {
+//  // The items we have to offer
+//  repeated tradable.Tradable Items = 1;
+//}
 
 message InventoryReply {
   // The items we have to offer
   repeated tradable.Tradable Items = 1;
-    
-  // ID Code of promose, only valid until TTL expires
+
+  // ID Code of promise, only valid until TTL expires
   // You must sent this in the order request
   // If the promise expires before your order is placed
   // It will be refused and you will have to get the inventory again
@@ -34,8 +63,6 @@ message InventoryReply {
 
   // Amount of cash in their account already.
   int32 AccountBalance = 6;
-
-  // 
 }
 
 message ActivatePromiseRequest {
@@ -49,3 +76,14 @@ message ActivatePromiseReply {
   string InventoryPromiseId = 2;
   int64 InventoryPromiseExpires = 3;
 }
+
+message GeneratePromiseRequest {
+  string ClientBindId = 1;
+  string ColonyId = 2;
+}
+
+message GeneratePromiseReply {
+  string InventoryPromiseId = 1;
+  int64 InventoryPromiseExpires = 2;
+}
+
